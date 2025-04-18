@@ -1,0 +1,269 @@
+<div class="flex flex-col flex-auto min-w-0">
+    <!-- Header -->
+    <div
+        class="flex flex-col p-6 border-b bg-card flex-0 dark:bg-transparent sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-8">
+        @if (isLoading) {
+        <div class="absolute inset-x-0 bottom-0">
+            <mat-progress-bar [mode]="'indeterminate'"></mat-progress-bar>
+        </div>
+        }
+        <div class="flex-1 min-w-0">
+            <!-- Breadcrumbs -->
+            <div class="flex flex-wrap items-center font-medium">
+
+                <div>
+
+                    <a [routerLink]="['/inicio']" class="whitespace-nowrap text-primary-500">Inicio</a>
+                </div>
+
+                <div class="flex items-center ml-1 whitespace-nowrap">
+                    <mat-icon class="text-secondary icon-size-5" [svgIcon]="'heroicons_mini:chevron-right'"></mat-icon>
+                    <a [routerLink]="['/personas']" class="ml-1 text-primary-500">Personas</a>
+                </div>
+            </div>
+            <!-- Title -->
+            <div class="mt-2">
+                <h2 class="text-3xl font-extrabold leading-7 tracking-tight truncate sm:leading-10 md:text-4xl">
+                    Personas
+                </h2>
+            </div>
+        </div>
+        <div class="flex items-center justify-between p-6 sm:px-10">
+            <!-- Buscador -->
+            <input type="search" [(ngModel)]="terminoBusqueda" placeholder="Buscar persona..."
+                class="w-full p-2 mr-4 border rounded" (input)="GetPersonas()" />
+            <!-- Botón Crear Producto -->
+            <button (click)="CrearPersona()" class="p-2 mr-2 text-white bg-blue-500 rounded whitespace-nowrap"> +
+                Crear Persona
+            </button>
+
+            <button (click)="download('csv')" class="p-2 text-white bg-green-500 rounded whitespace-nowrap"><mat-icon
+                    svgIcon="heroicons_outline:document-arrow-down" class="text-white"></mat-icon></button>
+        </div>
+    </div>
+
+    <!-- Main -->
+    <div class="overflow-x-auto">
+        <table class="min-w-full border border-gray-200 bg-white shadow-md rounded-lg">
+            <thead class="bg-gray-100 text-gray-700 uppercase text-sm">
+                <tr>
+                    <th class="px-6 py-3 text-left border-b">Nombre Completo</th>
+                    <th class="px-6 py-3 text-left border-b">Edad</th>
+                    <th class="px-6 py-3 text-left border-b">Peso</th>
+                    <th class="px-6 py-3 text-left border-b">Estatura</th>
+                    <th class="px-6 py-3 text-left border-b">Género</th>
+                    <th class="px-6 py-3 text-left border-b">Clasificación</th>
+                    <th class="px-6 py-3 text-left border-b">IMC</th>
+                    <th class="px-6 py-3 text-left border-b">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (persona of personasPaginadas; track persona.id) {
+                <tr class="hover:bg-gray-50 even:bg-gray-50 odd:bg-white">
+                    <td class="px-6 py-4 border-b">{{ persona.nombre_completo }}</td>
+                    <td class="px-6 py-4 border-b">{{ persona.edad }} Años</td>
+                    <td class="px-6 py-4 border-b">{{ persona.peso }} Kilogramos</td>
+                    <td class="px-6 py-4 border-b">{{ persona.estatura }} Metros</td>
+                    <td class="px-6 py-4 border-b">{{ persona.genero }}</td>
+                    <td class="px-6 py-4 border-b">{{ persona.clasificacion?.nombre }}</td>
+                    <td class="px-6 py-4 border-b">{{ persona.imc }}</td>
+                    <td class="px-6 py-4 border-b flex space-x-2">
+                        <button (click)="abrirModalEditar(persona)" 
+                            class="p-2 text-white bg-yellow-500 rounded hover:bg-yellow-600">
+                            <mat-icon svgIcon="heroicons_outline:pencil-square"></mat-icon>
+                        </button>
+                        <button (click)="EliminarPersona(persona.id!)" 
+                            class="p-2 text-white bg-red-500 rounded hover:bg-red-600">
+                            <mat-icon svgIcon="heroicons_solid:trash"></mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+
+    <mat-paginator [length]="totalPersonas" [pageSize]="personasPorPagina" [pageSizeOptions]="[5, 10, 25, 100]"
+        (page)="cambiarPagina($event)"></mat-paginator>
+    <div *ngIf="mostrarModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="w-[800px] rounded-lg bg-white p-6">
+            <h2 class="mb-4 text-xl font-bold">
+                {{ esEdicion ? 'Editar' : 'Crear' }} Persona
+            </h2>
+            <form (ngSubmit)="guardarPersona(personaForm)" #personaForm="ngForm">
+                <!-- Campo Género -->
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold"
+                        >Nombre completo</label
+                    >
+                    <input
+                        type="text"
+                        [(ngModel)]="personaSeleccionado.nombre_completo"
+                        name="nombre_completo"
+                        class="w-full p-2 border rounded"
+                        required
+                        minlength="5"
+                        [ngClass]="{
+                            'input-error':
+                                nombre_completo.invalid &&
+                                (nombre_completo.dirty ||
+                                    nombre_completo.touched),
+                        }"
+                        maxlength="50"
+                        #nombre_completo="ngModel"
+                        placeholder="Ingresa el nombre completo"
+                    />
+
+                    <!-- Mensajes de error para el campo Nombre -->
+                    <div
+                        *ngIf="
+                            nombre_completo.invalid &&
+                            (nombre_completo.dirty || nombre_completo.touched)
+                        "
+                        class="text-sm text-red-500"
+                    >
+                        <div *ngIf="nombre_completo.errors?.['required']">
+                            El nombre es obligatorio.
+                        </div>
+                        <div *ngIf="nombre_completo.errors?.['minlength']">
+                            El nombre debe tener al menos 3 caracteres.
+                        </div>
+                        <div *ngIf="nombre_completo.errors?.['maxlength']">
+                            El nombre debe tener maximo 50 caracteres.
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold">Género</label>
+                    <select [(ngModel)]="personaSeleccionado.genero" name="genero" class="w-full p-2 border rounded"
+                        required [ngClass]="{
+                            'input-error':
+                                genero.invalid && (genero.dirty || genero.touched),
+                        }" #genero="ngModel">
+                        <option value=""  selected>Selecciona el género</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                    </select>
+                    <div *ngIf="genero.invalid && (genero.dirty || genero.touched)" class="text-sm text-red-500">
+                        <div *ngIf="genero.errors?.['required']">
+                            El género es obligatorio.
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold">Edad</label>
+                    <input
+                        type="number"
+                        [(ngModel)]="personaSeleccionado.edad"
+                        name="edad"
+                        class="w-full p-2 border rounded"
+                        required
+                        [ngClass]="{
+                            'input-error':
+                                edad.invalid && (edad.dirty || edad.touched),
+                        }"
+                        min="13"
+                        max="18"
+                        #edad="ngModel"
+                        placeholder="Ingresa la edad, ej. 14 años"
+                    />
+                    <!-- Mensajes de error para el campo Edad -->
+                    <div
+                        *ngIf="edad.invalid && (edad.dirty || edad.touched)"
+                        class="text-sm text-red-500"
+                    >
+                        <div *ngIf="edad.errors?.['required']">
+                            La edad es obligatoria.
+                        </div>
+
+                        <div *ngIf="edad.errors?.['min']">
+                            La edad mínima es 13 años.
+                        </div>
+                        <div *ngIf="edad.errors?.['max']">
+                            La edad máxima es 18 años.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campo Peso -->
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold">Peso</label>
+                    <input
+                        type="number"
+                        [(ngModel)]="personaSeleccionado.peso"
+                        name="peso"
+                        class="w-full p-2 border rounded"
+                        required
+                        [ngClass]="{
+                            'input-error':
+                                peso.invalid && (peso.dirty || peso.touched),
+                        }"
+                        min="0"
+                        #peso="ngModel"
+                        placeholder="Ingresa el peso, ej. 55.7 en kilogramos"
+                    />
+                    <!-- Mensajes de error para el campo Peso -->
+                    <div
+                        *ngIf="peso.invalid && (peso.dirty || peso.touched)"
+                        class="text-sm text-red-500"
+                    >
+                        <div *ngIf="peso.errors?.['required']">
+                            El peso es obligatorio.
+                        </div>
+                        <div *ngIf="peso.errors?.['min']">
+                            El peso no puede ser negativo.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Campo Estatura -->
+                <div class="mb-4">
+                    <label class="block mb-2 text-sm font-bold">Estatura</label>
+                    <input
+                        type="number"
+                        [(ngModel)]="personaSeleccionado.estatura"
+                        name="estatura"
+                        class="w-full p-2 border rounded"
+                        required
+                        [ngClass]="{
+                            'input-error':
+                                estatura.invalid &&
+                                (estatura.dirty || estatura.touched),
+                        }"
+                        min="0"
+                        #estatura="ngModel"
+                        placeholder="Ingresa la estatura, ej. 1.70 en metros "
+                    />
+                    <!-- Mensajes de error para el campo Estatura -->
+                    <div
+                        *ngIf="
+                            estatura.invalid &&
+                            (estatura.dirty || estatura.touched)
+                        "
+                        class="text-sm text-red-500"
+                    >
+                        <div *ngIf="estatura.errors?.['required']">
+                            La estatura es obligatoria.
+                        </div>
+                        <div *ngIf="estatura.errors?.['min']">
+                            La estatura no puede ser negativa.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones -->
+                <div class="flex justify-end">
+                    <button type="button" (click)="mostrarModal = false"
+                        class="p-2 mr-2 text-white bg-gray-500 rounded">
+
+                        Cancelar
+                    </button>
+                    <button type="submit" class="p-2 text-white bg-blue-500 rounded" [disabled]="personaForm.invalid">
+                        Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

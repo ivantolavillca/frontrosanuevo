@@ -1,0 +1,59 @@
+<section class="content">
+  <div class="content-block">
+    @for (breadscrum of breadscrums; track breadscrum) {
+    <div class="block-header">
+      <!-- breadcrumb -->
+      <app-breadcrumb [title]="breadscrum.title" [items]="breadscrum.items" [active_item]="breadscrum.active">
+      </app-breadcrumb>
+    </div>
+    }
+    <!-- Widgets -->
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+        <mat-card>
+          <mat-card-header class="header-style">
+            <mat-card-title>Grafico de clasificación por Peso</mat-card-title>
+          </mat-card-header>
+          <div *ngIf="isLoading" ></div>
+          <div *ngIf="!isLoading" >     <mat-card-content>
+            <apx-chart [series]="performanceRateChartOptions.series!" [chart]="performanceRateChartOptions.chart!"
+              [xaxis]="performanceRateChartOptions.xaxis!" [stroke]="performanceRateChartOptions.stroke!"
+              [colors]="performanceRateChartOptions.colors!" [dataLabels]="performanceRateChartOptions.dataLabels!"
+              [legend]="performanceRateChartOptions.legend!" [markers]="performanceRateChartOptions.markers!"
+              [grid]="performanceRateChartOptions.grid!" [yaxis]="performanceRateChartOptions.yaxis!"
+              [tooltip]="performanceRateChartOptions.tooltip!" [title]="performanceRateChartOptions.title!">
+            </apx-chart>
+          </mat-card-content></div>
+     
+        </mat-card>
+      </div>
+      <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <div *ngIf="isLoading" >
+          <app-chart-card4 [maleCount]="0" [femaleCount]="0"></app-chart-card4>
+        </div>
+        <div *ngIf="!isLoading">
+          <app-chart-card4 [maleCount]="maleCount" [femaleCount]="femaleCount"></app-chart-card4>
+        </div>
+      </div>
+      <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <app-attendance-chart></app-attendance-chart>
+      </div> -->
+   
+      <!-- <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12">
+        <app-chart-card4 [maleCount]="2078" [femaleCount]="1825">
+        </app-chart-card4>
+      </div> -->
+
+    </div>
+
+    <div class="row clearfix">
+
+
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <app-chart-card1 [title]="title2" [subtitle]="subtitle2"></app-chart-card1>
+      </div>
+    </div>
+
+
+  </div>
+</section>

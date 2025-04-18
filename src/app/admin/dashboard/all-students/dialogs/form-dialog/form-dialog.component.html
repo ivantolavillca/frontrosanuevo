@@ -1,0 +1,174 @@
+<div class="addContainer">
+  <div class="modalHeader">
+    <div class="avatarDetails">
+      <label class="hoverable" for="tableFileInput">
+        <!-- <img [src]="'assets/avatar-placeholder.png'" alt="avatar" /> -->
+      </label>
+      <div class="modalTitle">
+        {{ esEdicion ? 'Editar' : 'Crear' }} Persona
+      </div>
+    </div>
+    <button
+      mat-icon-button
+      mat-dialog-close
+      class="modal-close-button"
+      aria-label="Close dialog"
+      type="button" (click)="cancelar()"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div mat-dialog-content>
+    <form class="register-form m-4" [formGroup]="personaForm" (ngSubmit)="guardar()">
+      <div class="row">
+        <!-- Nombre completo -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Nombre completo</mat-label>
+            <input matInput formControlName="nombre_completo" placeholder="Ingresa el nombre completo" required />
+            <mat-error *ngIf="personaForm.get('nombre_completo')?.hasError('required')">
+              El nombre es obligatorio.
+            </mat-error>
+            <mat-error *ngIf="personaForm.get('nombre_completo')?.hasError('minlength')">
+              Debe tener al menos 3 caracteres.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Género -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Género</mat-label>
+            <mat-select formControlName="genero"  >
+              <mat-option value="">[Seleccione una opción]</mat-option>
+              <mat-option value="1">Masculino</mat-option>
+              <mat-option value="2">Femenino</mat-option>
+            </mat-select>
+            <mat-error *ngIf="personaForm.get('genero')?.hasError('required')">
+              El género es obligatorio.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Edad -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Edad</mat-label>
+            <input matInput type="number" formControlName="edad" placeholder="Ingresa la edad" required />
+            <mat-error *ngIf="personaForm.get('edad')?.hasError('required')">
+              La edad es obligatoria.
+            </mat-error>
+            <mat-error *ngIf="personaForm.get('edad')?.hasError('min')">
+              La edad mínima es 13 años.
+            </mat-error>
+            <mat-error *ngIf="personaForm.get('edad')?.hasError('max')">
+              La edad máxima es 18 años.
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Peso -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Peso</mat-label>
+            <input matInput type="number" formControlName="peso" placeholder="Ingresa el peso" required />
+            <mat-error *ngIf="personaForm.get('peso')?.hasError('required')">
+              El peso es obligatorio.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Estatura -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>Estatura</mat-label>
+            <input matInput type="number" formControlName="estatura" placeholder="Ingresa la estatura" required />
+            <mat-error *ngIf="personaForm.get('estatura')?.hasError('required')">
+              La estatura es obligatoria.
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <!-- Antecedentes Familiares -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-checkbox
+            [checked]="personaForm.get('antecedentes_familiares')?.value === 2"
+            (change)="personaForm.get('antecedentes_familiares')?.setValue($event.checked ? 2 : 1)">
+            ¿En tu familia tienen antecedentes de obesidad?
+          </mat-checkbox>
+        </div>
+      
+        <!-- Condiciones Médicas -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-checkbox
+            [checked]="personaForm.get('condiciones_medicas')?.value === 2"
+            (change)="personaForm.get('condiciones_medicas')?.setValue($event.checked ? 2 : 1)">
+            ¿Sufre de condiciones médicas de obesidad?
+          </mat-checkbox>
+        </div>
+      
+        <!-- Estrés o Ansiedad -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-checkbox
+            [checked]="personaForm.get('estres_ansiedad')?.value === 2"
+            (change)="personaForm.get('estres_ansiedad')?.setValue($event.checked ? 2 : 1)">
+            ¿Sufre de estrés o ansiedad?
+          </mat-checkbox>
+        </div>
+      
+        <!-- Consumo de Medicamentos -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-checkbox
+            [checked]="personaForm.get('consumo_medicamentos')?.value === 2"
+            (change)="personaForm.get('consumo_medicamentos')?.setValue($event.checked ? 2 : 1)">
+            ¿Consume medicamentos que puedan alterar el peso?
+          </mat-checkbox>
+        </div>
+      
+        <!-- Actividad Física -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-checkbox
+            [checked]="personaForm.get('actividades_fisicas')?.value === 2"
+            (change)="personaForm.get('actividades_fisicas')?.setValue($event.checked ? 2 : 1)">
+            ¿Realiza actividad física?
+          </mat-checkbox>
+        </div>
+      
+        <!-- Consumo de Comida Rápida -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-checkbox
+            [checked]="personaForm.get('consumo_comida_rapida')?.value === 2"
+            (change)="personaForm.get('consumo_comida_rapida')?.setValue($event.checked ? 2 : 1)">
+            Consumo de Comida Rápida
+          </mat-checkbox>
+        </div>
+      
+        <!-- Número de Comidas al Día -->
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 mb-2">
+          <mat-form-field class="example-full-width mb-3" appearance="outline">
+            <mat-label>¿Cuántas veces come al día?</mat-label>
+            <input matInput type="number" formControlName="comida_diaria" placeholder="Número de comidas" />
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- Botones -->
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 mb-2">
+          <div class="example-button-row">
+            <button mat-flat-button class="formSubmitBtn" [disabled]="!personaForm.valid" type="submit">
+              Guardar
+            </button>
+            <button mat-flat-button mat-dialog-close (click)="cancelar()" class="formCancelBtn" tabindex="-1" type="button">
+              Cancelar
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

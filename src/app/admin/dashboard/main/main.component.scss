@@ -1,0 +1,12 @@
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px; /* Ajusta la altura según sea necesario */
+    text-align: center;
+  
+    mat-spinner {
+      margin: 0 auto;
+    }
+  }

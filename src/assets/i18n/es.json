@@ -1,0 +1,19 @@
+{
+  "LOGIN": {
+    "TITLE": "Bienvenido a Smart"
+  },
+  "MENUITEMS": {
+    "APPS": {
+      "TEXT": "MODELO PREDICCION DE ESTADO FISICO"
+    },
+    "CALENDAR": {
+      "TEXT": "Estadisticas"
+    },
+    "TASK": {
+      "TEXT": "Datos de personas"
+    },
+    "CONTACTS": {
+      "TEXT": "Predicción"
+    }
+  }
+}

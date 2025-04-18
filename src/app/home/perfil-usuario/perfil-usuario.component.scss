@@ -1,0 +1,45 @@
+.profile-card {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.avatar {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    border: 2px solid #3f51b5;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+
+.device-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.device-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.device-name {
+    font-weight: bold;
+}
+
+.device-location, .device-browser {
+    font-size: 0.9rem;
+    color: #777;
+}
+
+button mat-icon {
+    font-size: 20px;
+}
+
+.mat-form-field {
+    width: 100%;
+    margin-bottom: 10px;
+}

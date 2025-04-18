@@ -1,0 +1,140 @@
+<div class="w-full rounded-lg bg-gray-50 p-6 sm:p-8 shadow-lg">
+    <!-- Título principal con icono -->
+    <h1 class="mb-6 text-3xl font-extrabold text-gray-800 flex items-center">
+        <mat-icon class="mr-3 text-blue-600">account_circle</mat-icon>
+        Perfil del Usuario
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Información del Usuario -->
+        <div class="p-6 border border-gray-200 rounded-lg shadow-md bg-white">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                <mat-icon class="mr-2 text-blue-500">info</mat-icon>
+                Información Actual
+            </h2>
+            <p class="flex items-center text-gray-600 mb-2">
+                <mat-icon class="mr-2 text-gray-400">person</mat-icon>
+                <strong class="mr-1">Nombre Completo:</strong> {{ nombre_usuario }}
+            </p>
+            <p class="flex items-center text-gray-600 mb-2">
+                <mat-icon class="mr-2 text-gray-400">email</mat-icon>
+                <strong class="mr-1">Correo Electrónico:</strong> {{ email_usuario }}
+            </p>
+            <p class="flex items-center text-gray-600">
+                <mat-icon class="mr-2 text-gray-400">security</mat-icon>
+                <strong class="mr-1">Rol:</strong> {{ rol_usuario }}
+            </p>
+        </div>
+
+        <!-- Formulario de Edición -->
+        <div class="p-6 border border-gray-200 rounded-lg shadow-md bg-white">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4 flex items-center">
+                <mat-icon class="mr-2 text-blue-500">edit</mat-icon>
+                Editar Perfil
+            </h2>
+            <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+                <!-- Nombre -->
+                <div class="mb-5">
+                    <label class="block mb-2 text-sm font-medium text-gray-700 items-center">
+                        <mat-icon class="mr-2 text-gray-500">person</mat-icon>
+                        Nombre(s)
+                    </label>
+                    <input 
+                        matInput 
+                        formControlName="nombre_usuario" 
+                        placeholder="Ingresa tu nombre" 
+                        [ngClass]="{
+                            'border-red-500 focus:ring-red-500 focus:border-red-500': profileForm.get('nombre_usuario')?.invalid && profileForm.get('nombre_usuario')?.touched,
+                            'border-gray-300 focus:ring-blue-500 focus:border-blue-500': profileForm.get('nombre_usuario')?.valid || !profileForm.get('nombre_usuario')?.touched
+                        }"
+                        class="w-full p-3 border rounded-lg"
+                    />
+                    <div *ngIf="profileForm.get('nombre_usuario')?.touched && profileForm.get('nombre_usuario')?.errors" class="mt-2 text-sm text-red-500">
+                        <div *ngIf="profileForm.get('nombre_usuario')?.errors?.required">El nombre es obligatorio.</div>
+                        <div *ngIf="profileForm.get('nombre_usuario')?.errors?.minlength">El nombre debe tener al menos 3 caracteres.</div>
+                        <div *ngIf="profileForm.get('nombre_usuario')?.errors?.maxlength">El nombre no puede exceder los 50 caracteres.</div>
+                    </div>
+                </div>
+
+                <!-- Apellido -->
+                <div class="mb-5">
+                    <label class="block mb-2 text-sm font-medium text-gray-700 items-center">
+                        <mat-icon class="mr-2 text-gray-500">person</mat-icon>
+                        Apellido(s)
+                    </label>
+                    <input 
+                        matInput 
+                        formControlName="apellido_usuario" 
+                        placeholder="Ingresa tus apellidos" 
+                        [ngClass]="{
+                            'border-red-500 focus:ring-red-500 focus:border-red-500': profileForm.get('apellido_usuario')?.invalid && profileForm.get('apellido_usuario')?.touched,
+                            'border-gray-300 focus:ring-blue-500 focus:border-blue-500': profileForm.get('apellido_usuario')?.valid || !profileForm.get('apellido_usuario')?.touched
+                        }"
+                        class="w-full p-3 border rounded-lg"
+                    />
+                    <div *ngIf="profileForm.get('apellido_usuario')?.touched && profileForm.get('apellido_usuario')?.errors" class="mt-2 text-sm text-red-500">
+                        <div *ngIf="profileForm.get('apellido_usuario')?.errors?.required">El apellido es obligatorio.</div>
+                        <div *ngIf="profileForm.get('apellido_usuario')?.errors?.minlength">El apellido debe tener al menos 3 caracteres.</div>
+                        <div *ngIf="profileForm.get('apellido_usuario')?.errors?.maxlength">El apellido no puede exceder los 50 caracteres.</div>
+                    </div>
+                </div>
+
+                <!-- Correo Electrónico -->
+                <div class="mb-5">
+                    <label class="block mb-2 text-sm font-medium text-gray-700 items-center">
+                        <mat-icon class="mr-2 text-gray-500">email</mat-icon>
+                        Correo Electrónico
+                    </label>
+                    <input 
+                        matInput 
+                        formControlName="email_usuario" 
+                        placeholder="Ingresa tu correo electrónico" 
+                        [ngClass]="{
+                            'border-red-500 focus:ring-red-500 focus:border-red-500': profileForm.get('email_usuario')?.invalid && profileForm.get('email_usuario')?.touched,
+                            'border-gray-300 focus:ring-blue-500 focus:border-blue-500': profileForm.get('email_usuario')?.valid || !profileForm.get('email_usuario')?.touched
+                        }"
+                        class="w-full p-3 border rounded-lg"
+                    />
+                    <div *ngIf="profileForm.get('email_usuario')?.touched && profileForm.get('email_usuario')?.errors" class="mt-2 text-sm text-red-500">
+                        <div *ngIf="profileForm.get('email_usuario')?.errors?.required">El correo electrónico es obligatorio.</div>
+                        <div *ngIf="profileForm.get('email_usuario')?.errors?.email">El correo electrónico no es válido.</div>
+                    </div>
+                </div>
+
+                <!-- Contraseña -->
+                <div class="mb-5">
+                    <label class="block mb-2 text-sm font-medium text-gray-700 items-center">
+                        <mat-icon class="mr-2 text-gray-500">lock</mat-icon>
+                        Contraseña
+                    </label>
+                    <input 
+                        matInput 
+                        type="password" 
+                        formControlName="password_usuario" 
+                        placeholder="Ingresa tu contraseña" 
+                        [ngClass]="{
+                            'border-red-500 focus:ring-red-500 focus:border-red-500': profileForm.get('password_usuario')?.invalid && profileForm.get('password_usuario')?.touched,
+                            'border-gray-300 focus:ring-blue-500 focus:border-blue-500': profileForm.get('password_usuario')?.valid || !profileForm.get('password_usuario')?.touched
+                        }"
+                        class="w-full p-3 border rounded-lg"
+                    />
+                    <div *ngIf="profileForm.get('password_usuario')?.touched && profileForm.get('password_usuario')?.errors" class="mt-2 text-sm text-red-500">
+                        <div *ngIf="profileForm.get('password_usuario')?.errors?.required">La contraseña es obligatoria.</div>
+                        <div *ngIf="profileForm.get('password_usuario')?.errors?.minLength">Esta contraseña es demasiado corta. Debe contener al menos 8 caracteres.</div>
+                        <div *ngIf="profileForm.get('password_usuario')?.errors?.numeric">Esta contraseña es completamente numérica.</div>
+                        <div *ngIf="profileForm.get('password_usuario')?.errors?.common">Esta contraseña es demasiado común.</div>
+                    </div>
+                </div>
+
+                <!-- Botón de Guardar -->
+                <div class="mt-6 text-center">
+                    <button mat-raised-button color="primary" type="submit" [disabled]="!profileForm.valid"
+                        class="py-2 px-6 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-md flex items-center gap-2">
+                        <mat-icon class="text-base">save</mat-icon>
+                        Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

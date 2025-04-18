@@ -1,0 +1,131 @@
+<section class="content">
+  <div class="content-block">
+    <!-- Header -->
+    <div class="block-header">
+      <app-breadcrumb [title]="'Personas'" [items]="['Inicio', 'Personas']" [active_item]="'Lista de personas'">
+      </app-breadcrumb>
+    </div>
+
+    <!-- Search and Actions -->
+    <div class="row">
+      <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+          <div class="materialTableHeader">
+            <div class="left">
+              <ul class="header-buttons-left ms-0">
+                <li class="tbl-title">
+                  <h2>Buscar</h2>
+                </li>
+                <li class="tbl-search-box">
+                  <label for="search-input"><i class="material-icons search-icon">search</i></label>
+                  <input
+                    placeholder="Buscar persona..."
+                    type="text"
+                    [(ngModel)]="terminoBusqueda"
+                    (input)="GetPersonas()"
+                    class="browser-default search-field"
+                    aria-label="Search box"
+                  />
+                </li>
+              </ul>
+            </div>
+            <div class="right">
+              <ul class="tbl-export-btn">
+                <li class="tbl-header-btn">
+                  <div class="m-l-10">
+                    <button mat-icon-button (click)="CrearPersona()" class="col-green" matTooltip="Crear Persona">
+                      <mat-icon>add_circle_outline</mat-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="tbl-header-btn">
+                  <div class="m-l-10">
+                    <button mat-icon-button (click)="download('csv')" class="col-blue" matTooltip="Descargar CSV">
+                      <mat-icon>file_download</mat-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="overflow-auto">
+            <div class="responsive_table">
+              <table mat-table [dataSource]="personasPaginadas" matSort class="mat-cell advance-table">
+                <ng-container matColumnDef="nombre_completo">
+                  <mat-header-cell *matHeaderCellDef>Nombre Completo</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">{{ persona.nombre_completo }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="edad">
+                  <mat-header-cell *matHeaderCellDef>Edad</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">{{ persona.edad }} Años</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="peso">
+                  <mat-header-cell *matHeaderCellDef>Peso</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">{{ persona.peso }} Kilogramos</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="estatura">
+                  <mat-header-cell *matHeaderCellDef>Estatura</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">{{ persona.estatura }} Metros</mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="genero">
+                  <mat-header-cell *matHeaderCellDef>Género</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">
+                    <span *ngIf="persona.genero === 'Masculino'" class="badge badge-solid-green">
+                      {{ persona.genero?.nombre }}
+                    </span>
+                    <span *ngIf="persona.genero === 'Femenino'" class="badge badge-solid-purple">
+                      {{ persona.genero?.nombre  }}
+                    </span>
+                    <span *ngIf="persona.genero !== 'Masculino' && persona.genero !== 'Femenino'">
+                      {{ persona.genero?.nombre  }}
+                    </span>
+                  </mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="clasificacion">
+                  <mat-header-cell *matHeaderCellDef>Clasificación</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">{{ persona.clasificacion?.nombre }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="imc">
+                  <mat-header-cell *matHeaderCellDef>IMC</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">{{ persona.imc }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="acciones">
+                  <mat-header-cell *matHeaderCellDef>Acciones</mat-header-cell>
+                  <mat-cell *matCellDef="let persona">
+                    <button mat-icon-button (click)="abrirModalEditar(persona)" class="tbl-action-btn">
+                      <app-feather-icons [icon]="'edit'" [class]="'tbl-fav-edit'"></app-feather-icons>
+                    </button>
+                    <button mat-icon-button (click)="EliminarPersona(persona.id)" class="tbl-action-btn">
+                      <app-feather-icons [icon]="'trash-2'" [class]="'tbl-fav-delete'"></app-feather-icons>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <mat-header-row *matHeaderRowDef="['nombre_completo', 'edad', 'peso', 'estatura', 'genero', 'clasificacion', 'imc', 'acciones']"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: ['nombre_completo', 'edad', 'peso', 'estatura', 'genero', 'clasificacion', 'imc', 'acciones']"></mat-row>
+              </table>
+
+              <!-- Paginator -->
+              <mat-paginator
+                [length]="totalPersonas"
+                [pageSize]="personasPorPagina"
+                [pageSizeOptions]="[5, 10, 25, 100]"
+                (page)="cambiarPagina($event)"
+              ></mat-paginator>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</section>
